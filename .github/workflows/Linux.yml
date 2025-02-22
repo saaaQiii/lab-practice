@@ -1,0 +1,32 @@
+name: My First Pipeline
+
+on:
+ push:
+   branches: ["main"]
+
+jobs:
+  my-first-job:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4.2.2
+
+    - name: Updating Linux Packages
+      run: sudo apt update
+
+    - run: |
+         sudo apt install nginx
+         sudo systemctl enable nginx
+         sudo systemctl restart nginx
+         sudo systemctl status nginx
+         ls /etc/nginx/sites-available 
+         pwd
+         sudo rm -rf /var/www/html/*.html
+         sudo cp index.html /var/www/html
+         sudo systemctl restart nginx
+         echo "===================================================="
+         curl http://localhost:80 >> output.txt
+         cat output.txt
+
+    - uses: actions/upload-artifact@v4.6.1
+      with:
+        path: './output.txt'
